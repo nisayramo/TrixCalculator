@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Trix Calculator</string>
+    <string name="zero">0</string>
+    <string name="team1">My Team</string>
+    <string name="team2">Enemies</string>
+    <string name="resume">Resume</string>
+    <string name="newgame">New Game</string>
+    <string name="doubled">Doubled</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
