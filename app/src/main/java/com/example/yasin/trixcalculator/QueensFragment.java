@@ -26,8 +26,7 @@ public class QueensFragment extends Fragment implements View.OnClickListener{
     public QueensFragment() {
         // Required empty public constructor
     }
-    boolean isScored1 = false;
-    boolean isScored2 = false;
+    boolean isScored = false;
     private TextView t1QD;
     private TextView t2QD;
     private int t1=0,t2=0;
@@ -57,8 +56,9 @@ public class QueensFragment extends Fragment implements View.OnClickListener{
             @Override
             public void onClick(View view) {
 
-                if(isScored1 && isScored2){
-                    activity.setBanatd((t1-t2)*25);
+                activity.setBanatd((t1-t2)*25);
+
+                if(isScored){
                     KingFragment fragment = new KingFragment();
                     FragmentTransaction transaction = getFragmentManager().beginTransaction();
                     transaction.replace(R.id.mainFrame,fragment);
@@ -80,11 +80,11 @@ public class QueensFragment extends Fragment implements View.OnClickListener{
                     t1Q.setText(String.valueOf(value));
                     t2Q.setText(String.valueOf(mid-value-1));
                     activity.setBanat(value*-25);
-                    isScored1 = true;
+                    isScored = true;
                 }else{
                     t1Q.setText("0");
                     t2Q.setText("0");
-                    isScored1 = false;
+                    isScored = false;
                 }
 
             }
@@ -113,11 +113,9 @@ public class QueensFragment extends Fragment implements View.OnClickListener{
                 if(t1<4){
                     t1++;
                     t1QD.setText(String.valueOf(t1));
-                    isScored2 = true;
                 }else{
                     t1=0;
                     t1QD.setText("0");
-                    isScored2 = false;
                 }
                 break;
 
@@ -125,14 +123,12 @@ public class QueensFragment extends Fragment implements View.OnClickListener{
                 if(t2<4){
                     t2++;
                     t2QD.setText(String.valueOf(t2));
-                    isScored2 = true;
                 }else{
                     t2=0;
                     t2QD.setText("0");
-                    isScored2 = false;
                 }
                 break;
         }
-
     }
+
 }

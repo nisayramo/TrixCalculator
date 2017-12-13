@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -64,10 +65,12 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.complexFlow:
                 Intent intent1 = new Intent(this,ComplexActivity.class);
                 startActivityForResult(intent1,REQUEST_CODE_COMPLEX);
+                animateFAB();
                 break;
             case R.id.trixFlow:
                 Intent intent2 = new Intent(this,TrixActivity.class);
                 startActivityForResult(intent2,REQUEST_CODE_TRIX);
+                animateFAB();
                 break;
         }
     }
@@ -96,20 +99,24 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
+
+//        todo: Fix the total socres on top
+
+        LinearLayout scores = findViewById(R.id.ScoresList);
+        View row = getLayoutInflater().inflate(R.layout.row_layout,null,false);
+        View divider = getLayoutInflater().inflate(R.layout.divider_layout,null,false);
+        TextView t1 = row.findViewById(R.id.team1Score);
+        TextView game =row.findViewById(R.id.GameName);
+        TextView t2 = row.findViewById(R.id.team2Score);
+
         if(requestCode == REQUEST_CODE_COMPLEX){
             if(resultCode==RESULT_OK){
 
                 int complextotal = data.getIntExtra("team1Score",-1);
                 total+= complextotal;
-                View row = getLayoutInflater().inflate(R.layout.row_layout,null,false);
-
-                TextView t1 = row.findViewById(R.id.team1Score);
-                TextView game =row.findViewById(R.id.GameName);
-                TextView t2 = row.findViewById(R.id.team2Score);
                 t1.setText(String.valueOf(complextotal));
                 game.setText("C");
                 t2.setText(String.valueOf(-500-complextotal));
-                LinearLayout scores = findViewById(R.id.ScoresList);
                 scores.addView(row);
                 counter++;
                 if(counter % 2 == 0){
@@ -130,15 +137,9 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
 
                 int trixtotal = data.getIntExtra("team1Score",-1);
                 total+=trixtotal;
-                View row = getLayoutInflater().inflate(R.layout.row_layout,null,false);
-
-                TextView t1 = row.findViewById(R.id.team1Score);
-                TextView game =row.findViewById(R.id.GameName);
-                TextView t2 = row.findViewById(R.id.team2Score);
                 t1.setText(String.valueOf(trixtotal));
                 game.setText("T");
                 t2.setText(String.valueOf(500-trixtotal));
-                LinearLayout scores = findViewById(R.id.ScoresList);
                 scores.addView(row);
                 counter++;
                 if(counter % 2 == 0){
@@ -153,8 +154,21 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
             }
 
         }
-
-
+        switch (scores.getChildCount()){
+            case 2:
+                scores.addView(divider);
+                break;
+            case 5:
+                scores.addView(divider);
+                break;
+            case 8:
+                scores.addView(divider);
+                break;
+            case 11:
+                Toast.makeText(this, "Game Over!", Toast.LENGTH_SHORT).show();
+//                todo: diable buttons for new game
+                break;
+        }
 
     }
     long lastPress;
@@ -168,4 +182,5 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
             super.onBackPressed();
         }
     }
+
 }

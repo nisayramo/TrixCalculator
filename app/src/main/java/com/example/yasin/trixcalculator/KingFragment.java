@@ -24,7 +24,7 @@ public class KingFragment extends Fragment {
         // Required empty public constructor
     }
 
-    boolean isScored = true;
+    boolean isScored = false;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
