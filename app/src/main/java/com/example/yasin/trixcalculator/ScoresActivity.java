@@ -12,15 +12,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetView;
+
 public class ScoresActivity extends AppCompatActivity implements View.OnClickListener{
     private boolean isFabOpen = false;
     private FloatingActionButton mfloat, cfloat, tfloat;
     private Animation fab_open,fab_close, rotate_forward,rotate_backward;
 
+
+
     private static final int REQUEST_CODE_COMPLEX = 1;
     private static final int REQUEST_CODE_TRIX = 2;
 
     private int total = 0;
+
+
     private int counter =0;
     private TextView t2Total;
     private TextView t1Total;
@@ -37,8 +44,6 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
         cfloat.setOnClickListener(this);
         tfloat.setOnClickListener(this);
 
-
-
     }
     private void loadingResources(){
         mfloat = findViewById(R.id.mFlow);
@@ -47,6 +52,15 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
 
         t1Total = findViewById(R.id.team1Total);
         t2Total = findViewById(R.id.team2Total);
+
+        TapTargetView.showFor(this,
+                TapTarget.forView(findViewById(R.id.mFlow),
+                        "Press the button to choose a game")
+                .targetRadius(60)
+                .transparentTarget(true)
+                .dimColor(R.color.black)
+                .cancelable(false)
+        );
 
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
@@ -75,7 +89,7 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    private void animateFAB() {
+    public void animateFAB() {
 
         if(isFabOpen){
             mfloat.startAnimation(rotate_backward);
@@ -99,8 +113,6 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-
-//        todo: Fix the total socres on top
 
         LinearLayout scores = findViewById(R.id.ScoresList);
         View row = getLayoutInflater().inflate(R.layout.row_layout,null,false);

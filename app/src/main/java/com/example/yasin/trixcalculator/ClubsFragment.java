@@ -1,15 +1,20 @@
 package com.example.yasin.trixcalculator;
 
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 
 
 /**
@@ -32,7 +37,6 @@ public class ClubsFragment extends Fragment {
         final ComplexActivity activity = (ComplexActivity)getActivity();
 
         SeekBar seek = v.findViewById(R.id.Lseek);
-
         final TextView t1L = v.findViewById(R.id.team1L);
         final TextView t2L = v.findViewById(R.id.team2L);
 
@@ -52,6 +56,33 @@ public class ClubsFragment extends Fragment {
 
             }
         });
+
+//        todo: what if trix was played first (dont show this twice)
+
+        new TapTargetSequence(activity)
+                .targets(
+                        TapTarget
+                                .forView(v.findViewById(R.id.team1L),"This is your Score")
+                        .targetRadius(70)
+                        .cancelable(false)
+                        .dimColor(R.color.black)
+                        .drawShadow(true),
+                        TapTarget
+                                .forView(v.findViewById(R.id.Lseek),"Move the seekbar to change the socre")
+                        .targetRadius(70)
+                        .cancelable(false)
+                        .dimColor(R.color.black)
+                        .drawShadow(true),
+                        TapTarget
+                                .forView(v.findViewById(R.id.ClubsImage),"Tap the image when done to move to the next game")
+                        .targetRadius(125)
+                        .cancelable(false)
+                        .dimColor(R.color.black)
+                        .transparentTarget(true)
+                        .drawShadow(true)
+
+                ).start();
+
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
