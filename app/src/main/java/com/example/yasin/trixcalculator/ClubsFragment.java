@@ -1,6 +1,7 @@
 package com.example.yasin.trixcalculator;
 
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,6 +17,8 @@ import android.widget.TextView;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
 
+import static android.content.Context.MODE_PRIVATE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,16 +29,17 @@ public class ClubsFragment extends Fragment {
     public ClubsFragment() {
         // Required empty public constructor
     }
-
+    SharedPreferences prefs = null;
     boolean isScored = false;
+    ComplexActivity activity;
+    View v;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_clubs, container, false);
-
-        final ComplexActivity activity = (ComplexActivity)getActivity();
-
+         v = inflater.inflate(R.layout.fragment_clubs, container, false);
+        activity = (ComplexActivity)getActivity();
+        prefs = activity.getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
         SeekBar seek = v.findViewById(R.id.Lseek);
         final TextView t1L = v.findViewById(R.id.team1L);
         final TextView t2L = v.findViewById(R.id.team2L);
@@ -59,29 +63,7 @@ public class ClubsFragment extends Fragment {
 
 //        todo: what if trix was played first (dont show this twice)
 
-        new TapTargetSequence(activity)
-                .targets(
-                        TapTarget
-                                .forView(v.findViewById(R.id.team1L),"This is your Score")
-                        .targetRadius(70)
-                        .cancelable(false)
-                        .dimColor(R.color.black)
-                        .drawShadow(true),
-                        TapTarget
-                                .forView(v.findViewById(R.id.Lseek),"Move the seekbar to change the socre")
-                        .targetRadius(70)
-                        .cancelable(false)
-                        .dimColor(R.color.black)
-                        .drawShadow(true),
-                        TapTarget
-                                .forView(v.findViewById(R.id.ClubsImage),"Tap the image when done to move to the next game")
-                        .targetRadius(125)
-                        .cancelable(false)
-                        .dimColor(R.color.black)
-                        .transparentTarget(true)
-                        .drawShadow(true)
 
-                ).start();
 
 
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -118,5 +100,36 @@ public class ClubsFragment extends Fragment {
     }
 
 
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        if (prefs.getBoolean("firstrunComplex", true) && prefs.getBoolean("firstrunTrix", true)) {
+            new TapTargetSequence(activity)
+                    .targets(
+                            TapTarget
+                                    .forView(v.findViewById(R.id.team1L),"This is your Score")
+                                    .targetRadius(70)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true),
+                            TapTarget
+                                    .forView(v.findViewById(R.id.Lseek),"Move the seekbar to change the socre")
+                                    .targetRadius(70)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true),
+                            TapTarget
+                                    .forView(v.findViewById(R.id.ClubsImage),"Tap the image when done to move to the next game")
+                                    .targetRadius(125)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .transparentTarget(true)
+                                    .drawShadow(true)
+
+                    ).start();
+            prefs.edit().putBoolean("firstrunComplex", false).apply();
+        }
+
+    }
 }

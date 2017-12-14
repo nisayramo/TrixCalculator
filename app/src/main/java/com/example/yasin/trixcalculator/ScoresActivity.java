@@ -1,6 +1,7 @@
 package com.example.yasin.trixcalculator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -32,11 +33,14 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
     private TextView t2Total;
     private TextView t1Total;
 
+    SharedPreferences prefs = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scores);
+
+        prefs = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
 
         loadingResources();
 
@@ -53,14 +57,6 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
         t1Total = findViewById(R.id.team1Total);
         t2Total = findViewById(R.id.team2Total);
 
-        TapTargetView.showFor(this,
-                TapTarget.forView(findViewById(R.id.mFlow),
-                        "Press the button to choose a game")
-                .targetRadius(60)
-                .transparentTarget(true)
-                .dimColor(R.color.black)
-                .cancelable(false)
-        );
 
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_close);
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.fab_open);
@@ -195,4 +191,21 @@ public class ScoresActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (prefs.getBoolean("firstrun", true)) {
+
+            TapTargetView.showFor(this,
+                    TapTarget.forView(findViewById(R.id.mFlow),
+                            "Press the button to choose a game")
+                            .targetRadius(60)
+                            .transparentTarget(true)
+                            .dimColor(R.color.black)
+                            .cancelable(false)
+            );
+
+            prefs.edit().putBoolean("firstrun", false).apply();
+        }
+    }
 }

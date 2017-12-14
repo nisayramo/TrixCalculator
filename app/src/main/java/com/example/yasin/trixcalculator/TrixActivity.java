@@ -1,6 +1,7 @@
 package com.example.yasin.trixcalculator;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -8,9 +9,13 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+
 public class TrixActivity extends AppCompatActivity {
     private int trix;
     private boolean isScored = false;
+    SharedPreferences prefs = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -18,10 +23,13 @@ public class TrixActivity extends AppCompatActivity {
 
         SeekBar seek = findViewById(R.id.Tseek);
 
+        prefs = getSharedPreferences("com.mycompany.myAppName", MODE_PRIVATE);
+
         final TextView t1t = findViewById(R.id.team1T);
         final TextView t2t = findViewById(R.id.team2T);
 
         final ImageView image = findViewById(R.id.TrixImage);
+
 
         image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,5 +123,38 @@ public class TrixActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (prefs.getBoolean("firstrunTrix", true) && prefs.getBoolean("firstrunComplex",true)) {
+            new TapTargetSequence(this)
+                    .targets(
+                            TapTarget
+                                    .forView(findViewById(R.id.team1T),"This is your Score")
+                                    .targetRadius(70)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true),
+                            TapTarget
+                                    .forView(findViewById(R.id.Tseek),"Move the seekbar to change the socre")
+                                    .targetRadius(70)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true),
+                            TapTarget
+                                    .forView(findViewById(R.id.TrixImage),"Tap the image when done to move to the next game")
+                                    .targetRadius(125)
+                                    .cancelable(false)
+                                    .dimColor(R.color.black)
+                                    .transparentTarget(true)
+                                    .drawShadow(true)
+
+                    ).start();
+
+            prefs.edit().putBoolean("firstrunTrix", false).apply();
+        }
     }
 }
